@@ -3,6 +3,8 @@ const APIURL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.d
 const IMGPATH = "https://image.tmdb.org/t/p/w1280";
 const SEARCHAPI = "https://api.themoviedb.org/3/search/movie?&api_key=a904b75829fb6c035147a2bafbb6b628&query=";
 const POSTER_PLACEHOLDER = "https://via.placeholder.com/500x750?text=No+Image";
+const MAX_COMMENTS_PER_MOVIE = 10;
+const MAX_COMMENT_LENGTH = 180;
 
 // display data 
 const main = document.getElementById('main');
@@ -64,7 +66,7 @@ const showMovies = (movies) => {
             <h4>What others think</h4>
             <ul class="comment-list">${commentListMarkup}</ul>
             <form class="comment-form">
-                <input class="comment-input" type="text" maxlength="180" placeholder="Write a comment..." aria-label="Write a comment for ${escapeHtml(title)}" />
+                <input class="comment-input" type="text" maxlength="${MAX_COMMENT_LENGTH}" placeholder="Write a comment..." aria-label="Write a comment for ${escapeHtml(title)}" />
                 <button class="comment-submit" type="submit">Post</button>
             </form>
         </section>`;
@@ -83,7 +85,7 @@ const showMovies = (movies) => {
 
             const nextCommentsByMovie = getStoredComments();
             const existing = nextCommentsByMovie[id] || [];
-            nextCommentsByMovie[id] = [...existing, value].slice(-10);
+            nextCommentsByMovie[id] = [...existing, value].slice(-MAX_COMMENTS_PER_MOVIE);
             saveStoredComments(nextCommentsByMovie);
             showMovies(movies);
         });
