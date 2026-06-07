@@ -31,6 +31,12 @@ const escapeHtml = (text) => text
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 
+const getPosterUrl = (posterPath) => {
+    if (typeof posterPath !== "string") return POSTER_PLACEHOLDER;
+    if (!/^\/[a-zA-Z0-9._/-]+$/.test(posterPath)) return POSTER_PLACEHOLDER;
+    return `${IMGPATH}${encodeURI(posterPath)}`;
+};
+
 const createCommentListMarkup = (comments) => {
     if (!comments.length) {
         return `<li class="empty-comment">Be the first to share your thoughts.</li>`;
@@ -52,14 +58,11 @@ const showMovies = (movies) => {
         const { id, poster_path, title, vote_average, overview } = movie;
         const movieComments = commentsByMovie[id] || [];
         const commentListMarkup = createCommentListMarkup(movieComments);
-        const commentLimitNote = MAX_COMMENTS_PER_MOVIE === 1
-            ? "Latest 1 comment is shown."
-            : `Latest ${MAX_COMMENTS_PER_MOVIE} comments are shown.`;
 
         const movieEl = document.createElement('div');
         movieEl.classList.add('movie');
         movieEl.innerHTML = `
-        <img src="${poster_path ? `${IMGPATH}${poster_path}` : POSTER_PLACEHOLDER}" alt="${escapeHtml(title)}"/>
+        <img src="${getPosterUrl(poster_path)}" alt="${escapeHtml(title)}"/>
         <div class="movie-info">
             <h2 class="movie-title">${escapeHtml(title)}</h2>
             <span class="${getClassByRate(vote_average)}">${vote_average.toFixed(1)}</span>
@@ -74,7 +77,7 @@ const showMovies = (movies) => {
         <section class="comments">
             <h4>What others think</h4>
             <ul class="comment-list">${commentListMarkup}</ul>
-            <small class="comment-note">${commentLimitNote}</small>
+            <small class="comment-note">Latest ${MAX_COMMENTS_PER_MOVIE} comments are shown.</small>
             <form class="comment-form">
                 <input class="comment-input" type="text" maxlength="${MAX_COMMENT_LENGTH}" placeholder="Write a comment..." aria-label="Write a comment" />
                 <button class="comment-submit" type="submit">Post</button>
