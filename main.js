@@ -52,6 +52,9 @@ const showMovies = (movies) => {
         const { id, poster_path, title, vote_average, overview } = movie;
         const movieComments = commentsByMovie[id] || [];
         const commentListMarkup = createCommentListMarkup(movieComments);
+        const commentLimitNote = MAX_COMMENTS_PER_MOVIE === 1
+            ? "Latest 1 comment is shown."
+            : `Latest ${MAX_COMMENTS_PER_MOVIE} comments are shown.`;
 
         const movieEl = document.createElement('div');
         movieEl.classList.add('movie');
@@ -71,7 +74,7 @@ const showMovies = (movies) => {
         <section class="comments">
             <h4>What others think</h4>
             <ul class="comment-list">${commentListMarkup}</ul>
-            <small class="comment-note">Latest ${MAX_COMMENTS_PER_MOVIE} comments are shown.</small>
+            <small class="comment-note">${commentLimitNote}</small>
             <form class="comment-form">
                 <input class="comment-input" type="text" maxlength="${MAX_COMMENT_LENGTH}" placeholder="Write a comment..." aria-label="Write a comment" />
                 <button class="comment-submit" type="submit">Post</button>
