@@ -31,6 +31,14 @@ const escapeHtml = (text) => text
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 
+const createCommentListMarkup = (comments) => {
+    if (!comments.length) {
+        return `<li class="empty-comment">Be the first to share your thoughts.</li>`;
+    }
+
+    return comments.map((comment) => `<li>${escapeHtml(comment)}</li>`).join("");
+};
+
 const getMovies = async (APIURL) => {
     const res = await fetch(APIURL);
     const data = await res.json();
@@ -43,9 +51,7 @@ const showMovies = (movies) => {
     movies.forEach(movie => {
         const { id, poster_path, title, vote_average, overview } = movie;
         const movieComments = commentsByMovie[id] || [];
-        const commentListMarkup = movieComments.length
-            ? movieComments.map((comment) => `<li>${escapeHtml(comment)}</li>`).join("")
-            : `<li class="empty-comment">Be the first to share your thoughts.</li>`;
+        const commentListMarkup = createCommentListMarkup(movieComments);
 
         const movieEl = document.createElement('div');
         movieEl.classList.add('movie');
@@ -65,8 +71,9 @@ const showMovies = (movies) => {
         <section class="comments">
             <h4>What others think</h4>
             <ul class="comment-list">${commentListMarkup}</ul>
+            <small class="comment-note">Latest ${MAX_COMMENTS_PER_MOVIE} comments are shown.</small>
             <form class="comment-form">
-                <input class="comment-input" type="text" maxlength="${MAX_COMMENT_LENGTH}" placeholder="Write a comment..." aria-label="Write a comment for ${escapeHtml(title)}" />
+                <input class="comment-input" type="text" maxlength="${MAX_COMMENT_LENGTH}" placeholder="Write a comment..." aria-label="Write a comment" />
                 <button class="comment-submit" type="submit">Post</button>
             </form>
         </section>`;
@@ -78,6 +85,7 @@ const showMovies = (movies) => {
 
         const commentForm = movieEl.querySelector('.comment-form');
         const commentInput = movieEl.querySelector('.comment-input');
+        const commentList = movieEl.querySelector('.comment-list');
         commentForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const value = commentInput.value.trim();
@@ -87,7 +95,8 @@ const showMovies = (movies) => {
             const existing = nextCommentsByMovie[id] || [];
             nextCommentsByMovie[id] = [...existing, value].slice(-MAX_COMMENTS_PER_MOVIE);
             saveStoredComments(nextCommentsByMovie);
-            showMovies(movies);
+            commentList.innerHTML = createCommentListMarkup(nextCommentsByMovie[id]);
+            commentInput.value = "";
         });
 
         main.appendChild(movieEl);
