@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: "Poppins"   sans-serif;
+    font-family: "Poppins", sans-serif;
     background-color: #f3f3fc;
 }
 
@@ -13,16 +13,23 @@ header {
     background-color: #373b69;
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    flex-wrap: wrap;
+}
+
+#form {
+    width: min(100%, 420px);
 }
 
 .search {
-    background-color: transparent;
+    background-color: #2a2e55;
     border: 2px solid #22254b;
     border-radius: 50px;
     color: #fff;
     font-size: 1rem;
-    width: 50%;
+    width: 100%;
     padding: 0.5rem 1rem;
 }
 
@@ -30,27 +37,32 @@ header {
     color: #7378c5;
 }
 
-.search::focus {
+.search:focus {
     background-color: #22254b;
+    outline: none;
 }
 
 main {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    align-items: start;
 }
 
 .movie {
     background-color: #373b69;
-    border-radius: 3px;
+    border-radius: 8px;
     box-shadow: 0 4px 5px;
     overflow: hidden;
     position: relative;
-    margin: 1rem;
-    width: 300px;
+    width: 100%;
 }
 
 .movie img {
     width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
 }
 
 .movie-info {
@@ -67,6 +79,7 @@ main {
     border-radius: 3px;
     font-weight: bold;
     padding: 0.25rem 0.5rem;
+    flex-shrink: 0;
 }
 
 .movie-info span.green {
@@ -81,11 +94,16 @@ main {
     color: red;
 }
 
+.movie-title {
+    font-size: 1.05rem;
+    margin-right: 0.75rem;
+}
+
 .overview {
     background-color: #fff;
-    padding: 2rem;
+    padding: 1rem;
     position: absolute;
-    max-height: 100%;
+    max-height: 75%;
     overflow: auto;
     left: 0;
     bottom: 0;
@@ -102,6 +120,89 @@ main {
     transform: translateY(0);
 }
 
+.movie.show-overview .overview {
+    transform: translateY(0);
+}
+
+.movie-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 1rem 1rem;
+}
+
+.toggle-overview {
+    background-color: #22254b;
+    color: #fff;
+    border: 1px solid #7378c5;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+}
+
+.comments {
+    background-color: #2d315b;
+    border-top: 1px solid #22254b;
+    color: #fff;
+    padding: 1rem;
+}
+
+.comments h4 {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.comment-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    max-height: 140px;
+    overflow: auto;
+}
+
+.comment-list li {
+    background: #22254b;
+    border-radius: 4px;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+.comment-list .empty-comment {
+    opacity: 0.7;
+}
+
+.comment-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.comment-note {
+    display: block;
+    opacity: 0.75;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.comment-input {
+    flex: 1;
+    border: 1px solid #7378c5;
+    border-radius: 4px;
+    padding: 0.45rem 0.55rem;
+    background: #fff;
+}
+
+.comment-submit {
+    border: none;
+    border-radius: 4px;
+    padding: 0.45rem 0.7rem;
+    background: #136f35;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
 .logo {
     font-size: 2rem;
     color: #fff;
@@ -110,4 +211,34 @@ main {
 
 .vid {
     color: chartreuse;
+}
+
+@media (max-width: 768px) {
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    header {
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    #form {
+        width: 100%;
+    }
+
+    .movie-title {
+        font-size: 0.95rem;
+    }
+
+    .overview {
+        position: static;
+        transform: translateY(0);
+        max-height: none;
+        border-top: 1px solid #dbdbf6;
+    }
+
+    .movie-actions {
+        display: none;
+    }
 }
